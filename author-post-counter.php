@@ -25,14 +25,6 @@ function apc_options_page()
         'apc_post_count',
         'dashicons-clipboard',
     );
-    // add_submenu_page(
-    //     'author-post',
-    //     'Post Counter',
-    //     'Post Counter',
-    //     'manage_options',
-    //     'post-counter',
-    //     'apc_post_count',
-    // );
     add_submenu_page(
         'author-post',
         'Post Counter',
