@@ -1,7 +1,6 @@
 === Author Post Counter ===
 Name: Author Post Counter
 Contributors: felixsinggih
-Donate link: https://www.cminds.com/wordpress-plugins-library/purchase-cm-custom-reports-plugin-for-wordpress/
 Tags: reports, statistics, report, custom report, user report, post counter
 Requires at least: 7.4
 Tested up to: 8.1
