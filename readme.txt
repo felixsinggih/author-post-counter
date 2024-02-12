@@ -4,7 +4,7 @@ Contributors: felixsinggih
 Tags: reports, statistics, report, custom report, user report, post counter
 Requires at least: 7.4
 Tested up to: 8.1
-Stable tag: 1.0.0
+Stable tag: 2.0.0
 
 Display number post by number posts published by every Author your Wordpress Site.
 
@@ -31,7 +31,8 @@ Reports Included in the Plugin:
 
 
 == Changelog ==
+= 2.0.0 =
+Release Date: 12nd Feb 2024
+
 = 1.0.0 =
 Release Date: 23rd May 2023
-
-

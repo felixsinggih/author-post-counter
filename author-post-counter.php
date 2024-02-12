@@ -2,7 +2,7 @@
 /*
  * Plugin Name: Author Post Counter
  * Description: Display reports about number posts published by every Author on your Wordpress installation.
- * Version: 1.0.0
+ * Version: 2.0.0
  * Requires PHP: 7.4
  * Author: felixsinggih
  * Author URI: https://github.com/felixsinggih
