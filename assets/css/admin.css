@@ -1,0 +1,22 @@
+/**
+ * Author Post Counter Admin Styles
+ */
+
+.apc-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.apc-form-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .apc-form-item {
+    justify-content: space-between;
+  }
+}
