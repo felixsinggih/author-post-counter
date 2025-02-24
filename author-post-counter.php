@@ -2,7 +2,7 @@
 /*
  * Plugin Name: Author Post Counter
  * Description: Generate insightful reports showcasing the number of posts each author has published on your WordPress site.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires PHP: 7.4
  * Author: Felix Singgih
  * Author URI: https://github.com/felixsinggih
@@ -16,9 +16,10 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
+define('APC_PLUGIN_FILE', __FILE__);
 define('APC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('APC_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('APC_VERSION', '1.0.0');
+define('APC_VERSION', '1.0.1');
 
 // Include required files
 require_once APC_PLUGIN_DIR . 'includes/class-author-post-counter.php';

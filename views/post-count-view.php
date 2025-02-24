@@ -3,6 +3,9 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+// Get plugin data
+$plugin_data = get_plugin_data(APC_PLUGIN_FILE);
 ?>
 <div class="wrap">
     <h1 class="wp-heading-inline"><?php echo esc_html(get_admin_page_title()); ?></h1>
@@ -24,26 +27,42 @@ if (!defined('ABSPATH')) {
         </div>
     </div>
     
-    <table class="wp-list-table widefat fixed striped table-view-list" style="margin-top: 12px;">
-        <thead>
-            <tr>
-                <th>Author</th>
-                <th>Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($data as $row) : ?>
-            <tr>
-                <td><?php echo esc_html($row->display_name); ?></td>
-                <td><?php echo esc_html($row->amount); ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>Total</th>
-                <th><?php echo esc_html($total); ?></th>
-            </tr>
-        </tfoot>
-    </table>
+    <?php if(empty($data)){ ?>
+        <div class="notice notice-warning is-dismissible">
+            <p>No data available for the selected date range.</p>
+        </div>
+
+        <p>No data available for the selected date range.</p>
+    <?php }else{ ?>
+        <table class="wp-list-table widefat fixed striped table-view-list" style="margin-top: 12px;">
+            <thead>
+                <tr>
+                    <th>Author</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($data as $row) : ?>
+                <tr>
+                    <td><?php echo esc_html($row->display_name); ?></td>
+                    <td><?php echo number_format_i18n($row->amount); ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th><?php echo number_format_i18n($total); ?></th>
+                </tr>
+            </tfoot>
+        </table>
+    <?php } ?>
+
+    <div class="apc-plugin-info">
+        <p>
+            <?php echo esc_html($plugin_data['Version']); ?> |
+            By <a href="<?php echo esc_url($plugin_data['AuthorURI']); ?>" target="_blank"><?php echo $plugin_data['Author'] ?></a>
+        </p>
+    </div>
+
 </div>
