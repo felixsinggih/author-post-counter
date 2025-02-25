@@ -130,7 +130,7 @@ class Author_Post_Counter {
             }
         }
     
-        wp_cache_set($cache_key, $data, 'author_post_counter', 300);
+        wp_cache_set($cache_key, $data, 'author_post_counter', 60);
     
         return $data;
     }
