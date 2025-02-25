@@ -38,7 +38,7 @@ class Author_Post_Counter {
         add_menu_page(
             'Author Post Counter',
             'Author Post Counter',
-            'manage_options',
+            'delete_others_pages',
             'author-post',
             array($this, 'render_post_count_page'),
             'dashicons-clipboard'
@@ -48,7 +48,7 @@ class Author_Post_Counter {
             'author-post',
             'Post Counter',
             'Post Counter',
-            'manage_options',
+            'delete_others_pages',
             'author-post',
             array($this, 'render_post_count_page')
         );
