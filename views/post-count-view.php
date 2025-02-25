@@ -44,8 +44,8 @@ $plugin_data = get_plugin_data(APC_PLUGIN_FILE);
             <tbody>
             <?php foreach ($data as $row) : ?>
                 <tr>
-                    <td><?php echo esc_html($row['display_name']); ?></td>
-                    <td><?php echo esc_html(number_format_i18n($row['amount'])); ?></td>
+                    <td><?php echo esc_html($row->display_name); ?></td>
+                    <td><?php echo esc_html(number_format_i18n($row->amount)); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

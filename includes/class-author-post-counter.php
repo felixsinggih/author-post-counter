@@ -94,45 +94,24 @@ class Author_Post_Counter {
      * Get post count data
      */
     private function get_post_count_data($start_date, $end_date) {
-        $cache_key = "post_count_data_{$start_date}_{$end_date}";
-        $cached_data = wp_cache_get($cache_key, 'author_post_counter');
-    
-        if ($cached_data !== false) {
-            return $cached_data;
-        }
-    
-        $users = get_users();
-        $data = [];
-    
-        foreach ($users as $user) {
-            $args = [
-                'author'        => $user->ID,
-                'post_status'   => 'publish',
-                'post_type'     => 'post',
-                'date_query'    => [
-                    [
-                        'after'     => $start_date,
-                        'before'    => $end_date,
-                        'inclusive' => true,
-                    ],
-                ],
-                'fields' => 'ids',
-            ];
-            
-            $post_count = count(get_posts($args));
-    
-            if ($post_count > 0) {
-                $data[] = [
-                    'ID'           => $user->ID,
-                    'display_name' => $user->display_name,
-                    'amount'       => $post_count,
-                ];
-            }
-        }
-    
-        wp_cache_set($cache_key, $data, 'author_post_counter', 60);
-    
-        return $data;
+        global $wpdb;
+
+        $next_day = gmdate('Y-m-d', strtotime($end_date . ' +1 day'));
+
+        $query = $wpdb->prepare(
+            "SELECT u.ID, u.display_name, COUNT(p.post_author) AS amount
+            FROM {$wpdb->users} u
+            JOIN {$wpdb->posts} p ON u.ID = p.post_author
+            WHERE p.post_status = %s
+            AND p.post_type = %s
+            AND p.post_date >= %s
+            AND p.post_date < %s
+            GROUP BY p.post_author",
+            'publish', 'post', $start_date, $next_day
+        );
+        
+
+        return $wpdb->get_results($query);
     }
 
     /**
