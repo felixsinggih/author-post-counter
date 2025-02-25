@@ -67,7 +67,7 @@ class Author_Post_Counter {
         wp_enqueue_script('jquery-ui-datepicker');
         wp_enqueue_style(
             'jquery-ui-style', 
-            'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', 
+            APC_PLUGIN_URL . 'assets/jquery/jquery-ui.css', 
             array(), 
             '1.8.2'
         );
@@ -94,33 +94,85 @@ class Author_Post_Counter {
      * Get post count data
      */
     private function get_post_count_data($start_date, $end_date) {
-        global $wpdb;
-        
-        $db_prefix = $wpdb->prefix;
-        $next_day = date('Y-m-d', strtotime($end_date . ' +1 day'));
-        
-        $query = $wpdb->prepare(
-            "SELECT u.ID, u.display_name, COUNT(p.post_author) AS amount
-            FROM {$db_prefix}users u
-            JOIN {$db_prefix}posts p ON u.ID = p.post_author
-            WHERE p.post_status = %s
-            AND p.post_type = %s
-            AND p.post_date >= %s
-            AND p.post_date < %s
-            GROUP BY p.post_author",
-            'publish', 'post', $start_date, $next_day
-        );
-        
-        return $wpdb->get_results($query);
+        $cache_key = "post_count_data_{$start_date}_{$end_date}";
+        $cached_data = wp_cache_get($cache_key, 'author_post_counter');
+    
+        if ($cached_data !== false) {
+            return $cached_data;
+        }
+    
+        $users = get_users();
+        $data = [];
+    
+        foreach ($users as $user) {
+            $args = [
+                'author'        => $user->ID,
+                'post_status'   => 'publish',
+                'post_type'     => 'post',
+                'date_query'    => [
+                    [
+                        'after'     => $start_date,
+                        'before'    => $end_date,
+                        'inclusive' => true,
+                    ],
+                ],
+                'fields' => 'ids',
+            ];
+            
+            $post_count = count(get_posts($args));
+    
+            if ($post_count > 0) {
+                $data[] = [
+                    'ID'           => $user->ID,
+                    'display_name' => $user->display_name,
+                    'amount'       => $post_count,
+                ];
+            }
+        }
+    
+        wp_cache_set($cache_key, $data, 'author_post_counter', 300);
+    
+        return $data;
     }
     
+    // private function get_post_count_data($start_date, $end_date) {
+    //     global $wpdb;
+        
+    //     $cache_key = "post_count_data_{$start_date}_{$end_date}";
+    //     $cached_data = wp_cache_get($cache_key, 'author_post_counter');
+    
+    //     if ($cached_data !== false) {
+    //         return $cached_data;
+    //     }
+    
+    //     $next_day = gmdate('Y-m-d', strtotime($end_date . ' +1 day'));
+    
+    //     $query = $wpdb->prepare(
+    //         "SELECT u.ID, u.display_name, COUNT(p.post_author) AS amount
+    //         FROM {$wpdb->users} u
+    //         JOIN {$wpdb->posts} p ON u.ID = p.post_author
+    //         WHERE p.post_status = %s
+    //         AND p.post_type = %s
+    //         AND p.post_date >= %s
+    //         AND p.post_date < %s
+    //         GROUP BY p.post_author",
+    //         'publish', 'post', $start_date, $next_day
+    //     );
+    
+    //     $results = $wpdb->get_results($query);
+    
+    //     wp_cache_set($cache_key, $results, 'author_post_counter', 300);
+    
+    //     return $results;
+    // }
+
     /**
      * Render the post count page
      */
     public function render_post_count_page() {
         // Get date parameters from GET
-        $start_date = isset($_GET['start_date']) ? sanitize_text_field($_GET['start_date']) : date('Y-m-d');
-        $end_date = isset($_GET['end_date']) ? sanitize_text_field($_GET['end_date']) : date('Y-m-d');
+        $start_date = isset($_GET['start_date']) ? sanitize_text_field(wp_unslash($_GET['start_date'])) : gmdate('Y-m-d');
+        $end_date = isset($_GET['end_date']) ? sanitize_text_field(wp_unslash($_GET['end_date'])) : gmdate('Y-m-d');
         
         // Get data
         $data = $this->get_post_count_data($start_date, $end_date);

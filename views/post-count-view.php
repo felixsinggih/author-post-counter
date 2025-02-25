@@ -44,15 +44,15 @@ $plugin_data = get_plugin_data(APC_PLUGIN_FILE);
             <tbody>
             <?php foreach ($data as $row) : ?>
                 <tr>
-                    <td><?php echo esc_html($row->display_name); ?></td>
-                    <td><?php echo number_format_i18n($row->amount); ?></td>
+                    <td><?php echo esc_html($row['display_name']); ?></td>
+                    <td><?php echo esc_html(number_format_i18n($row['amount'])); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
                     <th>Total</th>
-                    <th><?php echo number_format_i18n($total); ?></th>
+                    <th><?php echo esc_html(number_format_i18n($total)); ?></th>
                 </tr>
             </tfoot>
         </table>
@@ -61,7 +61,7 @@ $plugin_data = get_plugin_data(APC_PLUGIN_FILE);
     <div class="apc-plugin-info">
         <p>
             <?php echo esc_html($plugin_data['Version']); ?> |
-            By <a href="<?php echo esc_url($plugin_data['AuthorURI']); ?>" target="_blank"><?php echo $plugin_data['Author'] ?></a>
+            By <a href="<?php echo esc_url($plugin_data['AuthorURI']); ?>" target="_blank">Felix Singgih</a>
         </p>
     </div>
 

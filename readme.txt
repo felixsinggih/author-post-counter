@@ -1,10 +1,12 @@
 === Author Post Counter ===
 Name: Author Post Counter
-Contributors: [Felix Singgih](https://github.com/felixsinggih)
-Tags: reports, statistics, report, custom report, user report, post counter
+Contributors: felixsinggih
+Tags: reports, statistics, custom report, user report, post counter
 Requires at least: 7.4
-Tested up to: 8.2
+Tested up to: 6.7.2
 Stable tag: 1.0.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Display number post by number posts published by every Author your Wordpress Site.
 
