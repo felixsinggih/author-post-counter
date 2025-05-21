@@ -52,6 +52,15 @@ class Author_Post_Counter {
             'author-post',
             array($this, 'render_post_count_page')
         );
+
+        add_submenu_page(
+            'author-post',
+            'Editor Counter',
+            'Editor Counter',
+            'delete_others_pages',
+            'editor-post',
+            array($this, 'render_editor_count_page')
+        );
     }
     
     /**
@@ -115,6 +124,35 @@ class Author_Post_Counter {
     }
 
     /**
+     * Get editor count data
+     */
+    private function get_editor_count_data($start_date, $end_date) {
+        global $wpdb;
+
+        $next_day = gmdate('Y-m-d', strtotime($end_date . ' +1 day'));
+
+        $query = $wpdb->prepare(
+            "SELECT u.ID, u.display_name, COUNT(pm.meta_value) AS amount, pm.meta_key, pm.meta_value
+            FROM {$wpdb->posts} p 
+            JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
+            JOIN {$wpdb->users} u ON u.ID = pm.meta_value
+            JOIN {$wpdb->usermeta} um ON um.user_id = u.ID
+            WHERE p.post_status = %s
+            AND p.post_type = %s
+            AND pm.meta_key = %s
+            AND um.meta_key = %s
+            AND um.meta_value >= %d
+            AND p.post_date >= %s
+            AND p.post_date < %s
+            GROUP BY pm.meta_value;",
+            'publish', 'post', '_edit_last', 'wp6k_user_level', 7, $start_date, $next_day
+        );
+        
+
+        return $wpdb->get_results($query);
+    }
+
+    /**
      * Render the post count page
      */
     public function render_post_count_page() {
@@ -128,5 +166,18 @@ class Author_Post_Counter {
         
         // Include view file
         include(APC_PLUGIN_DIR . 'views/post-count-view.php');
+    }
+
+    public function render_editor_count_page() {
+        // Get date parameters from GET
+        $start_date = isset($_GET['start_date']) ? sanitize_text_field(wp_unslash($_GET['start_date'])) : gmdate('Y-m-d');
+        $end_date = isset($_GET['end_date']) ? sanitize_text_field(wp_unslash($_GET['end_date'])) : gmdate('Y-m-d');
+        
+        // Get data
+        $data = $this->get_editor_count_data($start_date, $end_date);
+        $total = array_sum(array_column($data, 'amount'));
+        
+        // Include view file
+        include(APC_PLUGIN_DIR . 'views/editor-count-view.php');
     }
 }
